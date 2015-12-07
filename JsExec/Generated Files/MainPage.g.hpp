@@ -41,9 +41,9 @@ void ::JsExec::MainPage::Connect(int __connectionId, ::Platform::Object^ __targe
             break;
         case 3:
             {
-                this->button = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
-                (safe_cast<::Windows::UI::Xaml::Controls::Button^>(this->button))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::JsExec::MainPage::*)
-                    (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MainPage::button_Click);
+                this->runButton = safe_cast<::Windows::UI::Xaml::Controls::Button^>(__target);
+                (safe_cast<::Windows::UI::Xaml::Controls::Button^>(this->runButton))->Click += ref new ::Windows::UI::Xaml::RoutedEventHandler(this, (void (::JsExec::MainPage::*)
+                    (::Platform::Object^, ::Windows::UI::Xaml::RoutedEventArgs^))&MainPage::runButton_Click);
             }
             break;
         case 4:

@@ -36,7 +36,7 @@ namespace JsExec
     
         private: ::Windows::UI::Xaml::Controls::TextBlock^ textBlock;
         private: ::Windows::UI::Xaml::Controls::TextBox^ CodeInput;
-        private: ::Windows::UI::Xaml::Controls::Button^ button;
+        private: ::Windows::UI::Xaml::Controls::Button^ runButton;
         private: ::Windows::UI::Xaml::Controls::TextBox^ ConsoleOutput;
         private: ::Windows::UI::Xaml::Controls::Button^ resetButton;
     };

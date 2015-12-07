@@ -43,7 +43,9 @@ public:
 
 	void SetColor(const std::wstring userHexColorStr) override
 	{
+		// #AARRGGBB or #RRGGBB is expected
 		std::wstring hexColorStr;
+
 		// Remove leading # if it's there
 		if (userHexColorStr[0] == L'#')
 		{
@@ -54,7 +56,6 @@ public:
 			hexColorStr = userHexColorStr;
 		}
 
-		// #AARRGGBB or #RRGGBB is expected
 		Windows::UI::Color color;
 		color.A = 255;
 		int parsed = 0;
@@ -103,11 +104,10 @@ MainPage::MainPage()
 	CoreDispatcher^ pDispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
 	m_psConsole = std::make_shared<Console>(ConsoleOutput, this, pDispatcher);
 
+	// Initialize the JsWrapper on the worker thread where it will be used
 	auto initJs = ref new WorkItemHandler([this, pDispatcher] (IAsyncAction^ workItem)
 	{
-		JsWrapper::IJsWrapper& wrapper = JsWrapper::Instance();
-
-		wrapper.SetConsole(m_psConsole);
+		JsWrapper::Instance().SetConsole(m_psConsole);
 	});
 
 	ThreadPool::RunAsync(initJs);
@@ -118,8 +118,6 @@ void JsExec::MainPage::Execute()
 	String^ pCodeInput = CodeInput->Text;
 	std::wstring codeInput(pCodeInput->Data());
 
-	CodeInput->BorderBrush = ref new SolidColorBrush(Windows::UI::Colors::Black);
-
 	auto workItem = ref new WorkItemHandler([this, codeInput](IAsyncAction^ workItem)
 	{
 		try
@@ -128,25 +126,21 @@ void JsExec::MainPage::Execute()
 		}
 		catch (JsWrapper::Exception::Script& scriptException)
 		{
-			m_psConsole->Append(L"\nException:\n" + scriptException.why());
+			m_psConsole->Append(L"Exception:\n" + scriptException.why());
 		}
 	});
 
 	ThreadPool::RunAsync(workItem);
 }
 
-void JsExec::MainPage::button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void JsExec::MainPage::runButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	Execute();
 }
 
-void JsExec::MainPage::CodeInput_TextChanged_1(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e)
-{
-}
-
-
 void JsExec::MainPage::CodeInput_KeyDown(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e)
 {
+	// Secret hot keys
 	if (e->Key == Windows::System::VirtualKey::F1)
 		Execute();
 	else if (e->Key == Windows::System::VirtualKey::F2)
@@ -156,7 +150,7 @@ void JsExec::MainPage::CodeInput_KeyDown(Platform::Object^ sender, Windows::UI::
 void JsExec::MainPage::Reset()
 {
 	ConsoleOutput->Text = L"";
-	ConsoleOutput->Background = ref new SolidColorBrush(Windows::UI::Colors::Black);
+	ConsoleOutput->Background = nullptr;
 	ConsoleOutput->Projection = nullptr;
 	CodeInput->Text = L"";
 }
