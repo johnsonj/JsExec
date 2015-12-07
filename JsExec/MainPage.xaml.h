@@ -6,11 +6,7 @@
 #pragma once
 
 #include "MainPage.g.h"
-
-namespace JsWrapper
-{
-	class IConsole;
-}
+#include "JsWrapper.h"
 
 namespace JsExec
 {
@@ -32,6 +28,6 @@ namespace JsExec
 		void resetButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 
 	private:
-		std::shared_ptr<JsWrapper::IConsole> m_psConsole;
+		std::unique_ptr<JsWrapper::IJsWrapper> m_pWrapper;
 	};
 }

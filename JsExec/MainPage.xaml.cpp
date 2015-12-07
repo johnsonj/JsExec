@@ -7,7 +7,7 @@
 #include "MainPage.xaml.h"
 #include "JsWrapper.h"
 #include <string>
-
+#include <functional>
 #include <ppltasks.h>
 
 using namespace JsExec;
@@ -38,7 +38,7 @@ public:
 			ref new DispatchedHandler([this, message]()
 		{
 			m_pTextBody->Text = m_pTextBody->Text + L"\n" + ref new String(message.c_str());
-		}));		
+		}));
 	}
 
 	void SetColor(const std::wstring userHexColorStr) override
@@ -80,9 +80,7 @@ public:
 
 	void Rotate(double x, double y, double z)
 	{
-		IAsyncAction^ pAction = m_pDispatcher->RunAsync(
-			CoreDispatcherPriority::High,
-			ref new DispatchedHandler([this, x, y, z]()
+		IAsyncAction^ pAction = m_pDispatcher->RunAsync(CoreDispatcherPriority::High,ref new DispatchedHandler([this, x, y, z]()
 		{
 			PlaneProjection^ pPlaneProjection = ref new PlaneProjection();
 			pPlaneProjection->RotationX = x;
@@ -100,37 +98,42 @@ private:
 
 MainPage::MainPage()
 {
+	using JsWrapper::IConsole;
+
 	InitializeComponent();
 	CoreDispatcher^ pDispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
-	m_psConsole = std::make_shared<Console>(ConsoleOutput, this, pDispatcher);
 
-	// Initialize the JsWrapper on the worker thread where it will be used
-	auto initJs = ref new WorkItemHandler([this, pDispatcher] (IAsyncAction^ workItem)
+	// Oh my, oh my, a shared_ptr to a unique_ptr? What kind of maddness is this?
+	// There's no R value capture in C++ 11, so a lambda can't take ownership of a unique_ptr.
+	// C++14 will have generalized capture making this possible without the maddness.
+	auto pConsoleWrapper = std::make_shared<std::unique_ptr<IConsole>>(std::make_unique<Console>(ConsoleOutput, this, pDispatcher));
+	ThreadPool::RunAsync(ref new WorkItemHandler([this, pConsoleWrapper](IAsyncAction^ workItem)
 	{
-		JsWrapper::Instance().SetConsole(m_psConsole);
-	});
-
-	ThreadPool::RunAsync(initJs);
+		m_pWrapper = JsWrapper::CreateInstance(std::move(*pConsoleWrapper.get()));
+	}));
 }
 
 void JsExec::MainPage::Execute()
 {
 	String^ pCodeInput = CodeInput->Text;
 	std::wstring codeInput(pCodeInput->Data());
+	CoreDispatcher^ pUIThreadDispatch = CoreWindow::GetForCurrentThread()->Dispatcher;
 
-	auto workItem = ref new WorkItemHandler([this, codeInput](IAsyncAction^ workItem)
+	ThreadPool::RunAsync(ref new WorkItemHandler([this, codeInput, pUIThreadDispatch](IAsyncAction^ workItem)
 	{
 		try
 		{
-			JsWrapper::Instance().Execute(codeInput);
+			m_pWrapper->Execute(codeInput);
 		}
 		catch (JsWrapper::Exception::Script& scriptException)
 		{
-			m_psConsole->Append(L"Exception:\n" + scriptException.why());
+			std::wstring why = scriptException.why();
+			pUIThreadDispatch->RunAsync(CoreDispatcherPriority::High, ref new DispatchedHandler([=]()
+			{
+				ConsoleOutput->Text = ConsoleOutput->Text + L"\n" + L"Exception:\n" + ref new String(why.c_str());
+			}));
 		}
-	});
-
-	ThreadPool::RunAsync(workItem);
+	}));
 }
 
 void JsExec::MainPage::runButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
