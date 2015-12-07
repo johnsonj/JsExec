@@ -1,6 +1,6 @@
 # JsExec #
 
-What: A Windows Universal App with a JavaScript playground embeded.
+What: A Windows Universal App with an embeded JavaScript playground.
 
 Why: Fun
 
