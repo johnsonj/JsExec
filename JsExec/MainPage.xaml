@@ -27,7 +27,8 @@
             <Rectangle Fill="#FFF4F4F5" Margin="5,0,0,0" Stroke="Black" d:LayoutOverrides="LeftPosition, RightPosition" Grid.Row="2"/>
             <TextBox x:Name="CodeInput" Margin="22,0,97,10" TextWrapping="Wrap" Text="" Height="125" VerticalAlignment="Bottom" FontFamily="Consolas" AcceptsReturn="True" PlaceholderText="[code here, try: help();]" d:LayoutOverrides="LeftPosition, RightPosition" KeyDown="CodeInput_KeyDown" />
             <Button x:Name="button" Content="Run" Height="83" Margin="0,0,15,52" VerticalAlignment="Bottom" Width="65" Click="button_Click" HorizontalAlignment="Right"/>
-            <TextBox x:Name="ConsoleOutput" Margin="20,10,15,150" TextWrapping="Wrap" Text="" IsEnabled="False" FontFamily="Consolas" AcceptsReturn="True" PlaceholderText="[output here]" d:LayoutOverrides="LeftMargin, RightMargin, LeftPosition, RightPosition">
+            <TextBox x:Name="ConsoleOutput" Margin="20,10,15,150" TextWrapping="Wrap" Text="" IsEnabled="False" FontFamily="Consolas" AcceptsReturn="True" PlaceholderText="[output here]" d:LayoutOverrides="LeftMargin, RightMargin, LeftPosition, RightPosition" RenderTransformOrigin="0.5,0.5">
+
             </TextBox>
             <Button x:Name="resetButton" Content="Reset" Height="37" Margin="0,0,15,10" VerticalAlignment="Bottom" Width="65" Click="resetButton_Click" HorizontalAlignment="Right"/>
         </Grid>

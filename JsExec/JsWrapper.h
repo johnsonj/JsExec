@@ -15,6 +15,8 @@ namespace JsWrapper
 		virtual void SetConsole(std::shared_ptr<IConsole> psConsole) = 0;
 	};
 
+	// Using a singleton, as a result threading is touchy. All interaction with the IJsWrapper should
+	// happen on a consistent thread.
 	IJsWrapper& Instance();
 
 
@@ -28,12 +30,14 @@ namespace JsWrapper
 		virtual IConsole& GetConsole() = 0;
 	};
 
+	// Callbacks into the UI. Starting to get pretty funky, maybe IUIActions?
 	class IConsole
 	{
 	public:
 		virtual ~IConsole() = default;
 		virtual void Append(const std::wstring text) = 0;
 		virtual void SetColor(const std::wstring hexColorStr) = 0;
+		virtual void Rotate(double x, double y, double z) = 0;
 	};
 
 

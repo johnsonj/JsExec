@@ -112,6 +112,50 @@ struct Callsite
 		return nullptr;
 	}
 
+	
+	static std::vector<double> ExtractNumbers(JsValueRef* arguments, unsigned short count)
+	{
+		std::vector<double> numbers(count);
+
+		for (int i = 0; i < count; i++)
+		{
+			JsValueRef valRef;
+			AssertJsSuccess(JsConvertValueToNumber(arguments[i], &valRef));
+			double val;
+			AssertJsSuccess(JsNumberToDouble(valRef, &val));
+			numbers[i] = val;
+		}
+
+		return numbers;
+	}
+
+	static _Ret_maybenull_ JsValueRef CALLBACK SetRotation(_In_ JsValueRef callee,
+		_In_ bool isConstructCall,
+		_In_ JsValueRef *arguments,
+		_In_ unsigned short argumentCount,
+		_In_opt_ void* callbackState)
+	{
+		assert(callbackState);
+		JsWrapper::IExecutionContext& executionContext = *static_cast<JsWrapper::IExecutionContext*>(callbackState);
+
+		try
+		{
+			assert(argumentCount == 4);
+			if (argumentCount != 4)
+				return nullptr;
+
+			std::vector<double> cords = ExtractNumbers(&arguments[1], argumentCount - 1);
+			assert(cords.size() == 3);
+
+			executionContext.GetConsole().Rotate(cords[0], cords[1], cords[2]);
+		}
+		catch (...)
+		{
+			executionContext.GetConsole().Append(L"set_rotation failed");
+		}
+		return nullptr;
+	}
+
 	static _Ret_maybenull_ JsValueRef CALLBACK Help(_In_ JsValueRef callee,
 		_In_ bool isConstructCall,
 		_In_ JsValueRef *arguments,
@@ -136,6 +180,7 @@ struct Callsite
 			{ L"console_log", &ConsoleLog }, 
 			{ L"sleep", &Sleep }, 
 			{ L"set_color", &SetColor },
+			{ L"set_rotation", &SetRotation },
 			{ L"help", &Help },
 		};
 		return functions;

@@ -93,8 +93,6 @@ void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEvent
 		// Ensure the current window is active
 		Window::Current->Activate();
 	}
-
-	JsWrapper::IJsWrapper& wrapper = JsWrapper::Instance();
 }
 
 /// <summary>

@@ -7,6 +7,11 @@
 
 #include "MainPage.g.h"
 
+namespace JsWrapper
+{
+	class IConsole;
+}
+
 namespace JsExec
 {
 	/// <summary>
@@ -19,11 +24,15 @@ namespace JsExec
 
 	private:
 		void Execute();
+		void Reset();
 
 		void CodeInput_TextChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
 		void button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void CodeInput_TextChanged_1(Platform::Object^ sender, Windows::UI::Xaml::Controls::TextChangedEventArgs^ e);
 		void CodeInput_KeyDown(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e);
 		void resetButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+
+	private:
+		std::shared_ptr<JsWrapper::IConsole> m_psConsole;
 	};
 }
