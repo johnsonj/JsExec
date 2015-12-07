@@ -2,7 +2,7 @@
 
 What: A JavaScript playground written in C++.
 
-How: JsWrapper handles interactions with the Chakra JavaScript engine. The wrapper exports methods to JavaScript to call back into C++ code to modify the enviornment.
+How: JsWrapper handles interactions with the Chakra JavaScript engine. The wrapper exports methods to JavaScript to call back into C++ code to modify the environment.
 
 Why: Fun
 
