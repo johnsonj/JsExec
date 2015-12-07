@@ -178,7 +178,6 @@ public:
 	~ChakraWrapper();
 
 	void Execute(const std::wstring code) override;
-	IExecutionContext& ExecutionContext() { return m_executionContext; }
 
 private:
 	void RegisterGlobalFunction(const wchar_t* wzName, JsNativeFunction function);
@@ -217,7 +216,7 @@ void ChakraWrapper::RegisterGlobalFunction(const wchar_t* wzName, JsNativeFuncti
 	ThrowIfFailed(JsGetGlobalObject(&global));
 
 	JsValueRef jsFunc;
-	ThrowIfFailed(JsCreateFunction(function, &ExecutionContext(), &jsFunc));
+	ThrowIfFailed(JsCreateFunction(function, &m_executionContext, &jsFunc));
 
 	JsPropertyIdRef funcNameProp;
 	ThrowIfFailed(JsGetPropertyIdFromName(wzName, &funcNameProp));

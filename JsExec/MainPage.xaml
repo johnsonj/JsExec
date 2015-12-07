@@ -25,7 +25,7 @@
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="105" Margin="30,-5,0,0" TextWrapping="Wrap" Text="JsExec" VerticalAlignment="Top" Width="285" FontSize="96" Grid.Row="1"/>
         <Grid Margin="25,105,29,45" Grid.Row="1">
             <Rectangle Fill="#FFF4F4F5" Margin="5,0,0,0" Stroke="Black" d:LayoutOverrides="LeftPosition, RightPosition" Grid.Row="2"/>
-            <TextBox x:Name="CodeInput" Margin="22,0,97,10" TextWrapping="Wrap" Text="" Height="125" VerticalAlignment="Bottom" FontFamily="Consolas" AcceptsReturn="True" PlaceholderText="[code here, try: help();]" d:LayoutOverrides="LeftPosition, RightPosition" KeyDown="CodeInput_KeyDown" />
+            <TextBox x:Name="CodeInput" Margin="22,0,97,10" TextWrapping="Wrap" Text="" Height="125" VerticalAlignment="Bottom" FontFamily="Consolas" AcceptsReturn="True" PlaceholderText="code here, try: help();" d:LayoutOverrides="LeftPosition, RightPosition" KeyDown="CodeInput_KeyDown" IsSpellCheckEnabled="False" />
             <Button x:Name="runButton" Content="Run" Height="83" Margin="0,0,15,52" VerticalAlignment="Bottom" Width="65" Click="runButton_Click" HorizontalAlignment="Right"/>
             <TextBox x:Name="ConsoleOutput" Margin="20,10,15,150" TextWrapping="Wrap" Text="" IsEnabled="False" FontFamily="Consolas" AcceptsReturn="True" PlaceholderText="[output here]" d:LayoutOverrides="LeftMargin, RightMargin, LeftPosition, RightPosition" RenderTransformOrigin="0.5,0.5" />
             <Button x:Name="resetButton" Content="Reset" Height="37" Margin="0,0,15,10" VerticalAlignment="Bottom" Width="65" Click="resetButton_Click" HorizontalAlignment="Right"/>
